@@ -15,6 +15,7 @@ namespace MyPet.Models
         {
         }
 
+        public virtual DbSet<Pet> Pets { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,6 +30,24 @@ namespace MyPet.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
+
+            modelBuilder.Entity<Pet>(entity =>
+            {
+                entity.ToTable("Pet");
+
+                entity.Property(e => e.Birthday).HasColumnType("date");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("date");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.WeightRateToFeed).HasColumnType("numeric(3,2)");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.Pets)
+                    .HasForeignKey(d => d.OwnerId)
+                    .HasConstraintName("Owner");
+            });
 
             modelBuilder.Entity<User>(entity =>
             {
