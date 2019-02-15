@@ -22,4 +22,8 @@
   <ItemGroup>
     <Compile Remove="Models\Context.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Data\Interfaces\" />
+  </ItemGroup>
 </Project>
