@@ -24,10 +24,10 @@ namespace MyPet.Data
 
         public override void Delete(User record)
         {
-            if (!context.Users.Any(x => x.Id == record.Id))
-            {
-                return;
-            }
+            //if (!context.Users.Any(x => x.Id == record.Id))
+            //{
+            //    return;
+            //}
             base.Delete(record);
         }
 

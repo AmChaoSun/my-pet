@@ -8,7 +8,7 @@ namespace MyPet.Data
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected MyPetContext context;
+        protected readonly MyPetContext context;
         public GenericRepository(MyPetContext context)
         {
             this.context = context;

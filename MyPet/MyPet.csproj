@@ -17,13 +17,18 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
     <PackageReference Include="Bricelam.EntityFrameworkCore.Pluralizer" Version="1.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Models\Context.cs" />
+    <Compile Remove="Managers\Interfaces\IGenericManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Data\Interfaces\" />
+    <Folder Include="Managers\" />
+    <Folder Include="Managers\Interfaces\" />
+    <Folder Include="Models\DTOs\" />
   </ItemGroup>
 </Project>
