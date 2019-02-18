@@ -27,6 +27,10 @@ namespace MyPet.Managers
                 return null;
             }
             userRepository.Add(user);
+            foreach(var pet in user.Pets)
+            {
+                pet.Owner = null;
+            }
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }
@@ -43,6 +47,10 @@ namespace MyPet.Managers
                 return null;
             }
             var user = userRepository.GetById(id);
+            foreach (var pet in user.Pets)
+            {
+                pet.Owner = null;
+            }
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }

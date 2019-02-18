@@ -28,7 +28,6 @@ namespace MyPet.Controllers
         public IActionResult Get(int id)
         {
             var userId = Int32.Parse(User.FindFirst("UserId").Value);
-
             if(!(userId == id))
             {
                 return Forbid();
