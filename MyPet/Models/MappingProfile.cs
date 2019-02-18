@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using MyPet.Models.DTOs;
+using MyPet.Utils;
 
 namespace MyPet.Models
 {
@@ -9,7 +10,10 @@ namespace MyPet.Models
         public MappingProfile()
         {
             CreateMap<UserRegisterDto, User>()
-                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => HashHelper.GetHashedData(src.Password)));
+
+            CreateMap<User, UserDisplayDto>();
         }
     }
 }

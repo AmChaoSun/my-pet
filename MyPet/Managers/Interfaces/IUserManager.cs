@@ -6,9 +6,9 @@ namespace MyPet.Managers.Interfaces
 {
     public interface IUserManager
     {
-        User CreateUser(UserRegisterDto user);
-        User GetUser(int id);
+        UserDisplayDto CreateUser(UserRegisterDto user);
+        UserDisplayDto GetUserById(int id);
         void DeleteUser(int id);
-        User UpdateUser(User user);
+        UserDisplayDto UpdateUser(User user);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPet.Managers.Interfaces;
 using MyPet.Models.DTOs;
@@ -12,6 +14,7 @@ namespace MyPet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserManager userManager;
@@ -20,21 +23,27 @@ namespace MyPet.Controllers
             this.userManager = userManager;
         }
 
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var userId = Int32.Parse(User.FindFirst("UserId").Value);
+
+            if(!(userId == id))
+            {
+                return Forbid();
+            }
+
+            var displayUser = userManager.GetUserById(id);
+            if (displayUser == null)
+            {
+                return BadRequest("User not exsisted");
+            }
+            return Ok(displayUser);
         }
 
         // POST api/values
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult RegisterUser(UserRegisterDto registerUser)
         {
@@ -42,8 +51,12 @@ namespace MyPet.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = userManager.CreateUser(registerUser);
-            return Ok(user);
+            var displayUser = userManager.CreateUser(registerUser);
+            if (displayUser == null)
+            {
+                return BadRequest("UserName exisited.");
+            }
+            return Ok(displayUser);
         }
 
         // PUT api/values/5

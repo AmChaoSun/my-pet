@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,11 +16,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MyPet.Data;
 using MyPet.Data.Interfaces;
 using MyPet.Managers;
 using MyPet.Managers.Interfaces;
 using MyPet.Models;
+using MyPet.Utils;
 
 namespace MyPet
 {
@@ -37,12 +41,13 @@ namespace MyPet
         {
 
 
-            //dependency injection
+            //Dependency injection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<MyPetContext, MyPetContext>();
+            services.AddScoped<IAuthManager, AuthManager>();
 
-            //automapper
+            //Automapper
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MappingProfile());
@@ -50,6 +55,34 @@ namespace MyPet
 
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+
+
+            //Auth
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             // MVC Config
             services.AddMvc()
@@ -75,6 +108,7 @@ namespace MyPet
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

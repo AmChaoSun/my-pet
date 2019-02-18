@@ -4,6 +4,7 @@ using MyPet.Data.Interfaces;
 using MyPet.Managers.Interfaces;
 using MyPet.Models;
 using MyPet.Models.DTOs;
+using System.Linq;
 
 namespace MyPet.Managers
 {
@@ -17,12 +18,17 @@ namespace MyPet.Managers
             this.mapper = mapper;
         }
 
-        public User CreateUser(UserRegisterDto registerUser)
+        public UserDisplayDto CreateUser(UserRegisterDto registerUser)
         {
             //mapper
             var user = mapper.Map<UserRegisterDto, User>(registerUser);
-            return user;
-            //return userRepository.Add(user);
+            if (userRepository.Records.Any(x => x.UserName == user.UserName))
+            {
+                return null;
+            }
+            userRepository.Add(user);
+            var displayUser = mapper.Map<User, UserDisplayDto>(user);
+            return displayUser;
         }
 
         public void DeleteUser(int id)
@@ -30,12 +36,18 @@ namespace MyPet.Managers
             throw new NotImplementedException();
         }
 
-        public User GetUser(int id)
+        public UserDisplayDto GetUserById(int id)
         {
-            throw new NotImplementedException();
+            if (!userRepository.Records.Any(x => x.Id == id))
+            {
+                return null;
+            }
+            var user = userRepository.GetById(id);
+            var displayUser = mapper.Map<User, UserDisplayDto>(user);
+            return displayUser;
         }
 
-        public User UpdateUser(User user)
+        public UserDisplayDto UpdateUser(User user)
         {
             throw new NotImplementedException();
         }

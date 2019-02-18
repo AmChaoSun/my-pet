@@ -15,10 +15,6 @@ namespace MyPet.Data
 
         public override User Add(User record)
         {
-            if (context.Users.Any(x => x.UserName == record.UserName))
-            {
-                return null;
-            }
             return base.Add(record);
         }
 
