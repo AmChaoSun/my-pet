@@ -8,8 +8,8 @@ namespace MyPet.Models
     {
         public MappingProfile()
         {
-            //CreateMap<UserRegisterDto, User>()
-                //.ForMember(d => d.)
+            CreateMap<UserRegisterDto, User>()
+                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }
