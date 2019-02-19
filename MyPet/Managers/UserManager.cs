@@ -4,6 +4,7 @@ using MyPet.Data.Interfaces;
 using MyPet.Managers.Interfaces;
 using MyPet.Models;
 using MyPet.Models.DTOs;
+using MyPet.Utils;
 using System.Linq;
 
 namespace MyPet.Managers
@@ -27,6 +28,8 @@ namespace MyPet.Managers
                 return null;
             }
             userRepository.Add(user);
+
+            //prevent back reference by making owner null
             foreach(var pet in user.Pets)
             {
                 pet.Owner = null;
@@ -37,14 +40,19 @@ namespace MyPet.Managers
 
         public void DeleteUser(int id)
         {
-            throw new NotImplementedException();
+            if (!userRepository.Records.Any(x => x.Id == id))
+            {
+                throw new CustomDbConflictException("User not exsisted.");
+            }
+            var user = userRepository.GetById(id);
+            userRepository.Delete(user);
         }
 
         public UserDisplayDto GetUserById(int id)
         {
             if (!userRepository.Records.Any(x => x.Id == id))
             {
-                return null;
+                throw new CustomDbConflictException("User not exsisted.");
             }
             var user = userRepository.GetById(id);
             foreach (var pet in user.Pets)
@@ -55,9 +63,25 @@ namespace MyPet.Managers
             return displayUser;
         }
 
-        public UserDisplayDto UpdateUser(User user)
+        public UserDisplayDto UpdateUser(UserUpdateDto updateUser)
         {
-            throw new NotImplementedException();
+            if (!userRepository.Records.Any(x => x.Id == updateUser.Id))
+            {
+                throw new CustomDbConflictException("User not exsisted.");
+            }
+            if (userRepository.Records.Any(x => x.UserName == updateUser.UserName))
+            {
+                throw new CustomDbConflictException("User name exsisted.");
+            }
+
+            var user = userRepository.GetById(updateUser.Id);
+            user = userRepository.PartialUpdate(user, updateUser);
+            foreach (var pet in user.Pets)
+            {
+                pet.Owner = null;
+            }
+            var displayUser = mapper.Map<User, UserDisplayDto>(user);
+            return displayUser;
         }
     }
 }

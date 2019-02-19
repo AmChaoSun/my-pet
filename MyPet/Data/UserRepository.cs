@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MyPet.Data.Interfaces;
 using MyPet.Models;
+using MyPet.Models.DTOs;
 
 namespace MyPet.Data
 {
@@ -43,13 +44,12 @@ namespace MyPet.Data
             return user;
         }
 
-        public override User Update(User record)
+        public User PartialUpdate(User user,UserUpdateDto updateUser)
         {
-            if (context.Users.Any(x => x.UserName == record.UserName))
-            {
-                return null;
-            }
-            return base.Update(record);
+            var entry = context.Entry(user);
+            entry.CurrentValues.SetValues(updateUser);
+            entry.State = EntityState.Modified;
+            return user;
         }
 
 
