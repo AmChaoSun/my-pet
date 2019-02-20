@@ -25,7 +25,7 @@ namespace MyPet.Managers
             var user = mapper.Map<UserRegisterDto, User>(registerUser);
             if (userRepository.Records.Any(x => x.UserName == user.UserName))
             {
-                return null;
+                throw new CustomDbConflictException("User name exsisted.");
             }
             userRepository.Add(user);
 
