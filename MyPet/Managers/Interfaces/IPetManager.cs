@@ -6,9 +6,9 @@ namespace MyPet.Managers.Interfaces
 {
     public interface IPetManager
     {
-        IEnumerable<PetDto> GetPetsByOwner(int ownerId);
-        PetDto CreatePet(PetDto pet);
-        PetDto UpdatePet(PetDto pet);
+        IEnumerable<PetDisplayDto> GetPetsByOwner(int ownerId);
+        PetDisplayDto CreatePet(PetRegisterDto pet);
+        PetDisplayDto UpdatePet(int petId, int OwnerId, PetUpdateDto pet);
         void DeletePet(int petId, int ownerId);
     }
 }

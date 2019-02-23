@@ -37,8 +37,6 @@ namespace MyPet.Models
 
                 entity.Property(e => e.Birthday).HasColumnType("date");
 
-                entity.Property(e => e.CreatedOn).HasColumnType("date");
-
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.WeightRateToFeed).HasColumnType("numeric(3,2)");

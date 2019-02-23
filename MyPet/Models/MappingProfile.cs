@@ -14,6 +14,8 @@ namespace MyPet.Models
                 .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(src => DateTime.Now))
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => HashHelper.GetHashedData(src.Password)));
             CreateMap<User, UserDisplayDto>();
+            CreateMap<PetRegisterDto, Pet>();
+            CreateMap<Pet, PetDisplayDto>();
         }
     }
 }

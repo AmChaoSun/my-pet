@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPet.Models.DTOs
 {
-    public class PetDto
+    public class PetDisplayDto
     {
         public int PetId { get; set; }
 

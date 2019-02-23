@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using MyPet.Data.Interfaces;
 using MyPet.Models;
+using MyPet.Models.DTOs;
 
 namespace MyPet.Data
 {
@@ -11,35 +14,25 @@ namespace MyPet.Data
         {
         }
 
-        public override Pet Add(Pet record)
-        {
-            if(context.Pets
-                .Where(x => x.Owner == record.Owner)
-                .Any(x => x.Name == record.Name))
-            {
-                return null;
-            }
-            return base.Add(record);
-        }
-
         public override void Delete(Pet record)
         {
-            if(!context.Pets.Any(x => x.PetId == record.PetId))
-            {
-                return;
-            }
             base.Delete(record);
         }
 
-        public override Pet Update(Pet record)
+        public List<Pet> GetPetsByOwner(int ownerId)
         {
-            if (context.Pets
-                .Where(x => x.Owner == record.Owner)
-                .Any(x => x.Name == record.Name))
-            {
-                return null;
-            }
-            return base.Update(record);
+            return Records.Where(x => x.OwnerId == ownerId).ToList();
         }
+
+        public Pet PartialUpdate(Pet pet, PetUpdateDto updatedpet)
+        {
+            //update
+            var entry = context.Entry(pet);
+            entry.CurrentValues.SetValues(updatedpet);
+            entry.State = EntityState.Modified;
+
+            return pet;
+        }
+
     }
 }

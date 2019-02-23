@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace MyPet.Model
+namespace MyPet.Models.DTOs
 {
-    public partial class Pet
+    public class PetUpdateDto
     {
-        public int PetId { get; set; }
+        [StringLength(50, ErrorMessage = "The {0} length must not exceed {1}.")]
         public string Name { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime? Birthday { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public int OwnerId { get; set; }
+
         public double? Weight { get; set; }
         public decimal? WeightRateToFeed { get; set; }
         public int? MealsPerDay { get; set; }
-
-        public virtual User Owner { get; set; }
     }
 }

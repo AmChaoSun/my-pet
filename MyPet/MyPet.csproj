@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Remove="Models\Context.cs" />
     <Compile Remove="Managers\Interfaces\IGenericManager.cs" />
+    <Compile Remove="Model\MyPetContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

@@ -36,7 +36,7 @@ namespace MyPet.Controllers
 
         // POST api/pets
         [HttpPost]
-        public IActionResult Post(PetDto pet)
+        public IActionResult CreatePet(PetRegisterDto pet)
         {
             if (!ModelState.IsValid)
             {
@@ -58,9 +58,9 @@ namespace MyPet.Controllers
 
         }
 
-        // PUT api/values/5
+         //PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, PetDto pet)
+        public IActionResult Put(int id, PetUpdateDto pet)
         {
             if (!ModelState.IsValid)
             {
@@ -69,13 +69,9 @@ namespace MyPet.Controllers
 
             //authentication
             var userId = Int32.Parse(User.FindFirst("UserId").Value);
-            if (!(pet.OwnerId == userId))
-            {
-                return Forbid();
-            }
             try
             {
-                var newPet = petManager.UpdatePet(pet);
+                var newPet = petManager.UpdatePet(id, userId, pet);
                 return Ok(newPet);
             }
             catch (CustomDbConflictException e)
