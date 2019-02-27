@@ -18,6 +18,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
+    <Folder Include="Managers\" />
+    <Folder Include="TestData\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Repositories\UserRepository.Test" />

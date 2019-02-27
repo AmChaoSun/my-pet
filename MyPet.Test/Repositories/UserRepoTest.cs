@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MyPet.Data;
 using MyPet.Data.Interfaces;
 using MyPet.Models;
@@ -14,8 +15,15 @@ namespace MyPet.Test.Repositories
         private readonly IUserRepository userRepository;
         public UserRepoTest()
         {
+            // Create a fresh service provider, and therefore a fresh 
+            // InMemory database instance.
+            var serviceProvider = new ServiceCollection()
+                .AddEntityFrameworkInMemoryDatabase()
+                .BuildServiceProvider();
+
             var options = new DbContextOptionsBuilder<MyPetContext>()
-                .UseInMemoryDatabase(databaseName: "MyPet")
+                .UseInMemoryDatabase("UserRepoTestD")
+                .UseInternalServiceProvider(serviceProvider)
                 .Options;
             MyPetContext myPetContextt = new MyPetContext(options);
             myPetContextt.Database.EnsureDeleted();
@@ -34,7 +42,7 @@ namespace MyPet.Test.Repositories
                 CreatedOn = DateTime.Parse("Jan 1, 2009")
             };
             var savedUser = userRepository.Add(zak);
-            Assert.Equal(1, userRepository.GetAll().Count());
+            Assert.Single(userRepository.GetAll());
             Assert.Equal("zak", savedUser.UserName);
 
         }
