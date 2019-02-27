@@ -29,11 +29,6 @@ namespace MyPet.Managers
             }
             userRepository.Add(user);
 
-            //prevent back reference by making owner null
-            foreach(var pet in user.Pets)
-            {
-                pet.Owner = null;
-            }
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }
@@ -55,10 +50,6 @@ namespace MyPet.Managers
                 throw new CustomDbConflictException("User not exsisted.");
             }
             var user = userRepository.GetById(id);
-            foreach (var pet in user.Pets)
-            {
-                pet.Owner = null;
-            }
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }
