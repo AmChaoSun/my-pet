@@ -44,7 +44,7 @@ namespace MyPet.Data
             return user;
         }
 
-        public User PartialUpdate(User user,UserUpdateDto updateUser)
+        public User PartialUpdate(User user, UserUpdateDto updateUser)
         {
             var entry = context.Entry(user);
             entry.CurrentValues.SetValues(updateUser);

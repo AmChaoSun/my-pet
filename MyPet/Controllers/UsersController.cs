@@ -63,7 +63,7 @@ namespace MyPet.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody]UserUpdateDto user)
+        public IActionResult UpdateUser(int id, [FromBody]UserUpdateDto updateInfo)
         {
             //model validation
             if (!ModelState.IsValid)
@@ -78,10 +78,10 @@ namespace MyPet.Controllers
                 return Forbid();
             }
 
-            user.Id = id;
+            //user.Id = id;
             try
             {
-                var displayUser = userManager.UpdateUser(user);
+                var displayUser = userManager.UpdateUser(id, updateInfo);
                 return Ok(displayUser);
             }
             catch (CustomDbConflictException e)

@@ -11,10 +11,10 @@ namespace MyPet.Test
             Assert.Equal(2, 2);
         }
 
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(2, 3);
-        }
+        //[Fact]
+        //public void FailingTest()
+        //{
+        //    Assert.Equal(2, 3);
+        //}
     }
 }

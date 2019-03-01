@@ -9,6 +9,6 @@ namespace MyPet.Managers.Interfaces
         UserDisplayDto CreateUser(UserRegisterDto user);
         UserDisplayDto GetUserById(int id);
         void DeleteUser(int id);
-        UserDisplayDto UpdateUser(UserUpdateDto user);
+        UserDisplayDto UpdateUser(int id, UserUpdateDto updateInfo);
     }
 }

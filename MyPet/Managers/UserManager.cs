@@ -27,6 +27,10 @@ namespace MyPet.Managers
             {
                 throw new CustomDbConflictException("User name exsisted.");
             }
+            if (userRepository.Records.Any(x => x.Email == user.Email))
+            {
+                throw new CustomDbConflictException("User Email exsisted.");
+            }
             userRepository.Add(user);
 
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
@@ -35,42 +39,50 @@ namespace MyPet.Managers
 
         public void DeleteUser(int id)
         {
-            if (!userRepository.Records.Any(x => x.Id == id))
+            var user = userRepository.Records.Find(id);
+            if (user == null)
             {
                 throw new CustomDbConflictException("User not exsisted.");
             }
-            var user = userRepository.GetById(id);
+            user = userRepository.GetById(id);
             userRepository.Delete(user);
         }
 
         public UserDisplayDto GetUserById(int id)
         {
-            if (!userRepository.Records.Any(x => x.Id == id))
+            var user = userRepository.Records.Find(id);
+            if (user == null)
             {
                 throw new CustomDbConflictException("User not exsisted.");
             }
-            var user = userRepository.GetById(id);
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }
 
-        public UserDisplayDto UpdateUser(UserUpdateDto updateUser)
+        public UserDisplayDto UpdateUser(int id, UserUpdateDto updateInfo)
         {
-            if (!userRepository.Records.Any(x => x.Id == updateUser.Id))
+            //verify user exist or not
+            var user = userRepository.Records.Find(id);
+            if(user == null)
             {
                 throw new CustomDbConflictException("User not exsisted.");
             }
-            if (userRepository.Records.Any(x => x.UserName == updateUser.UserName))
+
+            //verify unique properties
+            if (userRepository.Records.Any(x => x.UserName == updateInfo.UserName))
             {
                 throw new CustomDbConflictException("User name exsisted.");
             }
 
-            var user = userRepository.GetById(updateUser.Id);
-            user = userRepository.PartialUpdate(user, updateUser);
-            foreach (var pet in user.Pets)
+            if (userRepository.Records.Any(x => x.Email == updateInfo.Email))
             {
-                pet.Owner = null;
+                throw new CustomDbConflictException("User Email exsisted.");
             }
+
+            //update
+            user = userRepository.PartialUpdate(user, updateInfo);
+
+            //mapper
             var displayUser = mapper.Map<User, UserDisplayDto>(user);
             return displayUser;
         }
